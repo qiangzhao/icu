@@ -1256,16 +1256,21 @@ SRBRoot::addKeyBytes(const char *keyBytes, int32_t length, UErrorCode &errorCode
         return fKeysTop;
     }
 
+    new_fKeysCapacity = fKeysCapacity;
     keypos = fKeysTop;
     fKeysTop += length;
-    if (fKeysTop >= fKeysCapacity) {
+    while (new_fKeysCapacity < fKeysTop) {
         /* overflow - resize the keys buffer */
-        fKeysCapacity += KEY_SPACE_SIZE;
-        fKeys = static_cast<char *>(uprv_realloc(fKeys, fKeysCapacity));
+	new_fKeysCapacity += KEY_SPACE_SIZE;
+    }
+
+    if (new_fKeysCapacity > fKeysCapacity) {
+        fKeys = static_cast<char *>(uprv_realloc(fKeys, new_fKeysCapacity));
         if(fKeys == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
             return -1;
         }
+	fKeysCapacity = new_fKeysCapacity;
     }
 
     uprv_memcpy(fKeys + keypos, keyBytes, length);

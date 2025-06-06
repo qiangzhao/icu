@@ -109,6 +109,7 @@ public:
   KeyMapEntry *fKeyMap;
   int32_t fKeysBottom, fKeysTop;
   int32_t fKeysCapacity;
+  int32_t new_fKeysCapacity;
   int32_t fKeysCount;
   int32_t fLocalKeyLimit; /* key offset < limit fits into URES_TABLE */
 
